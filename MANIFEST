@@ -1,0 +1,5 @@
+Parse.pm			The module itself
+MANIFEST			This list of files
+Build.PL
+META.yml
+SIGNATURE    Added here by Module::Build
