@@ -109,8 +109,9 @@ use Carp       ( 'carp', 'croak' );
 use Encode;
 use Math::BigInt;
 use Math::BigFloat;
+use Unicode::Normalize  ( 'NFD', 'NFC' );
 
-our $VERSION    = '0.10';
+our $VERSION    = '0.11';
 our @ISA        = 'Exporter';
 our @EXPORT_OK  = qw( &unpackAliasRec &packAliasRec );
 
@@ -356,7 +357,7 @@ sub unpackUC {
 
 sub packUC {
     my($str) = @_;
-    my($bytes) = Encode::encode('utf-16be', $str);
+    my($bytes) = Encode::encode('utf-16be', NFD($str));
     return pack('n', length($bytes)/2) . $bytes;
 }
 

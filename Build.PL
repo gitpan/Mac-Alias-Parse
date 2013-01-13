@@ -18,6 +18,10 @@ Module::Build->new
          'Math::BigFloat' => 0,
          Encode => 0,
      },
+     build_requires => {
+         'Test::NoWarnings' => 0,
+         'MIME::Base64' => 0,
+     },
 
      meta_merge => {
          resources => {

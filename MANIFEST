@@ -1,5 +1,7 @@
 Parse.pm			The module itself
 MANIFEST			This list of files
-Build.PL
-META.yml
+Build.PL			Build script
+META.yml			Distribution metadata
+t/t2_pieces.t
+t/t3_samples.t
 SIGNATURE    Added here by Module::Build
