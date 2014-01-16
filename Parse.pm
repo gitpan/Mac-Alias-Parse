@@ -1,8 +1,37 @@
 #
 # A tiny pure-perl Mac Alias record class.
 # Based on an unattributed text file found floating around
-# on the internet.
+# on the internet, plus further research.
 #
+
+package Mac::Alias::Parse;
+
+=head1 NAME
+
+Mac::Alias::Parse - Parse and create Mac Alias records
+
+=head1 SYNOPSIS
+
+ use Mac::Alias::Parse;
+
+ $fields = Mac::Alias::Parse::unpack_alias( $bytes );
+ $filename = $fields->{target}->{long_name};
+    
+ $bytes = Mac::Alias::Parse::pack_alias(
+     target => { inode => ..., long_name => ..., createdUTC => ..., ... },
+     folder => { ... },
+     inode_path => [ ... ],
+     ...
+ );
+
+=head1 DESCRIPTION
+
+The functions C<unpack_alias()> and C<pack_alias()> convert between an
+alias record, as found in various Mac data structures or on disk, and
+an easier-to-manipulate Perl data structure.
+
+=cut
+
 
 # Excerpt from text file:
 
@@ -101,8 +130,6 @@
 # If an inode/fileID is missing (e.g. some network filesystems) it
 # is stored as 0xFFFFFFFF.
 
-package Mac::Alias::Parse;
-
 use strict;
 use Exporter   ( );
 use Carp       ( 'carp', 'croak' );
@@ -111,11 +138,11 @@ use Math::BigInt;
 use Math::BigFloat;
 use Unicode::Normalize  ( 'NFD', 'NFC' );
 
-our $VERSION    = '0.11';
+our $VERSION    = '0.20';
 our @ISA        = 'Exporter';
-our @EXPORT_OK  = qw( &unpackAliasRec &packAliasRec );
+our @EXPORT_OK  = qw( &unpack_alias &pack_alias );
 
-sub unpackAliasRec {
+sub unpack_alias {
     my($bytes) = @_;
     my(%into, %vol, %dir, %targ, $appinfo, $recsize, $version,
        $file_length, $file_name, $vol_length, $vol_name, $extra_ptr,
@@ -197,7 +224,7 @@ sub unpackAliasRec {
             } elsif ($t == 19) {
                 $vol{'posix_path'} = $f;
             } elsif ($t == 20) {
-                $vol{'alias'} = &unpackAliasRec($f);
+                $vol{'alias'} = &unpack_alias($f);
             } elsif ($t == 21) {
                 $into{'posix_homedir_length'} = unpack('n', $f);
             } else {
@@ -211,7 +238,7 @@ sub unpackAliasRec {
     \%into;
 }
 
-sub packAliasRec {
+sub pack_alias {
     my(%alis) = @_;
 
     # Extract the hashes into local copies so we can
@@ -296,7 +323,7 @@ sub packAliasRec {
         } elsif ($k eq 'posix_path') {
             push(@extra, 19, Encode::encode('utf8', $v));
         } elsif ($k eq 'alias') {
-            push(@extra, 20, &packAliasRec(%$v));
+            push(@extra, 20, &pack_alias(%$v));
         } elsif ($k eq 'createdUTC') {
             push(@extra, 16, &packLongTime($v));
         } elsif ($k eq '9') {
@@ -399,5 +426,20 @@ sub packLongTime {
         croak "Cannot pack \"$str\" into 48.16-bit time";
     }
 }
+
+=head1 CREDITS
+
+The initial information about the structure of alias records was derived
+from an unattributed text file found in various places on the internet.
+
+Perl implementation and additional format investigation by Wim Lewis.
+
+=head1 COPYRIGHT
+
+Copyright 2011-2013, Wim Lewis E<lt>wiml@hhhh.orgE<gt>
+
+This software is available under the same terms as perl.
+
+=cut
 
 1;

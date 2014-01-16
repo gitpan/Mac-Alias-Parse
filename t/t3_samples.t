@@ -44,9 +44,9 @@ sub test_roundtrip {
     my($sample_bytes, $sample_rec) = @_;
     my($got, $regot);
 
-    $got = Mac::Alias::Parse::unpackAliasRec($sample_bytes);
+    $got = Mac::Alias::Parse::unpack_alias($sample_bytes);
     is_deeply($got, $sample_rec);
-    $regot = Mac::Alias::Parse::packAliasRec(%$got);
+    $regot = Mac::Alias::Parse::pack_alias(%$got);
 
     # We check the first 150 bytes for equality here.
     # Unfortunately the rest of the alias record
@@ -58,7 +58,7 @@ sub test_roundtrip {
     # Failing a byte-exact roundtrip back to alias record,
     # at least test that we can once again parse it back to
     # the fields we expect.
-    is_deeply(Mac::Alias::Parse::unpackAliasRec($regot), $got);
+    is_deeply(Mac::Alias::Parse::unpack_alias($regot), $got);
 }
 
 &test_roundtrip($sample1, $expect1);

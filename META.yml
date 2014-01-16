@@ -1,27 +1,29 @@
 ---
-name: Mac-Alias-Parse
-version: 0.11
+abstract: 'Pure-Perl parser/constructor for Macintosh alias records.'
 author:
   - 'Wim Lewis <wiml@hhhh.org>'
-abstract: Pure-Perl parser/constructor for Macintosh alias records.
+build_requires:
+  MIME::Base64: 0
+  Test::NoWarnings: 0
+configure_requires:
+  Module::Build: 0.42
+dynamic_config: 0
+generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.132830'
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-  repository: http://www.hhhh.org/src/hg/parsealias/
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Mac-Alias-Parse
+provides:
+  Mac::Alias::Parse:
+    file: Parse.pm
+    version: 0.20
 requires:
   Encode: 0
   Math::BigFloat: 0
   Math::BigInt: 0
-  perl: 5.7.1
-build_requires:
-  MIME::Base64: 0
-  Test::NoWarnings: 0
-dynamic_config: 0
-provides:
-  Mac::Alias::Parse:
-    file: Parse.pm
-    version: 0.11
-generated_by: Module::Build version 0.280801
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  perl: v5.7.1
+resources:
+  license: http://dev.perl.org/licenses/
+  repository: http://www.hhhh.org/src/hg/parsealias/
+version: 0.20
